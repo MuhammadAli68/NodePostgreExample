@@ -36,7 +36,7 @@ const pool = new Pool({
 // });
 
 app.get('/', (req, res) => {
-  customMetric.inc();
+  //customMetric.inc();
   res.send('Hello, World!');
 });
 
