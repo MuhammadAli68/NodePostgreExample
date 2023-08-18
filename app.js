@@ -1,7 +1,7 @@
 const express = require('express');
 const { Pool } = require('pg'); // Import the pg module
 //const promBundle = require('express-prom-bundle');
-const prometheus = require('prom-client');
+//const prometheus = require('prom-client');
 
 const app = express();
 const port = 3000;
@@ -30,10 +30,10 @@ const pool = new Pool({
 //app.use(metricsMiddleware);
 
 // Define a custom metric
-const customMetric = new prometheus.Counter({
-  name: 'custom_metric_total',
-  help: 'Custom metric description',
-});
+// const customMetric = new prometheus.Counter({
+//   name: 'custom_metric_total',
+//   help: 'Custom metric description',
+// });
 
 app.get('/', (req, res) => {
   customMetric.inc();
@@ -69,10 +69,10 @@ app.get('/new-feature', async (req, res) => {
 });
 
 // Expose Prometheus metrics endpoint
-app.get('/metrics', (req, res) => {
-  res.set('Content-Type', prometheus.register.contentType);
-  res.end(prometheus.register.metrics());
-});
+// app.get('/metrics', (req, res) => {
+//   res.set('Content-Type', prometheus.register.contentType);
+//   res.end(prometheus.register.metrics());
+// });
 
 app.listen(port, () => {
   console.log(`App listening at http://localhost:${port}`);
