@@ -1,8 +1,21 @@
 const express = require('express');
 const { Pool } = require('pg'); // Import the pg module
+const promBundle = require('express-prom-bundle');
+const prometheus = require('prom-client');
 
 const app = express();
 const port = 3000;
+
+// Configure Prometheus middleware
+const metricsMiddleware = promBundle({
+  includeMethod: true,
+  includePath: true,
+  promClient: {
+    collectDefaultMetrics: {
+      timeout: 1000,
+    },
+  },
+});
 
 // Set up a connection pool
 const pool = new Pool({
@@ -13,7 +26,17 @@ const pool = new Pool({
   port: 5432,
 });
 
+// Use Prometheus middleware
+app.use(metricsMiddleware);
+
+// Define a custom metric
+const customMetric = new prometheus.Counter({
+  name: 'custom_metric_total',
+  help: 'Custom metric description',
+});
+
 app.get('/', (req, res) => {
+  customMetric.inc();
   res.send('Hello, World!');
 });
 
